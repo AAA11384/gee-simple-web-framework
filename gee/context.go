@@ -9,11 +9,20 @@ import (
 type H map[string]interface{}
 
 type Context struct {
-	W          http.ResponseWriter
-	Req        *http.Request
-	Path       string
-	Method     string
+	//origin objects
+	W   http.ResponseWriter
+	Req *http.Request
+	//request information
+	Path   string
+	Method string
+	Params map[string]string
+	//response info
 	StatusCode int
+}
+
+func (c *Context) Param(key string) string {
+	value, _ := c.Params[key]
+	return value
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {

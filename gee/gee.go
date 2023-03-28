@@ -25,8 +25,7 @@ func (e *Engine) Run(path string) {
 }
 
 func (e *Engine) addRoute(method, pattern string, f HandlerFunc) {
-	s := method + "-" + pattern
-	e.router.handler[s] = f
+	e.router.addRoute(method, pattern, f)
 }
 
 func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
