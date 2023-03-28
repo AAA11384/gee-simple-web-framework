@@ -33,12 +33,16 @@ func (group *RouterGroup) combineHandlers(handlers HandlersChain) HandlersChain 
 	return mergedHandler
 }
 
-func (group *RouterGroup) POST(pattern string, f HandlerFunc) {
-	realPattern := group.basePath + pattern
-	group.engine.POST(realPattern, f)
+func (group *RouterGroup) Handle(method, pattern string, f ...HandlerFunc) {
+	HandlerChain := append(group.Handlers, f...)
+	realPath := group.calculateAbsolutePath(pattern)
+	group.engine.router.addRoute(method, realPath, HandlerChain...)
 }
 
-func (group *RouterGroup) GET(pattern string, f HandlerFunc) {
-	realPattern := group.basePath + pattern
-	group.engine.GET(realPattern, f)
+func (group *RouterGroup) POST(pattern string, f ...HandlerFunc) {
+	group.Handle("POST", pattern, f...)
+}
+
+func (group *RouterGroup) GET(pattern string, f ...HandlerFunc) {
+	group.Handle("GET", pattern, f...)
 }

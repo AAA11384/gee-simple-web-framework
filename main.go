@@ -11,11 +11,10 @@ func main() {
 		c.HTML(http.StatusOK, "<h1>Index Page</h1>")
 	})
 	v1 := r.Group("/v1")
-	{
-		v1.GET("/", func(c *gee.Context) {
-			c.HTML(http.StatusOK, "<h1>Hello</h1>")
-		})
 
+	v1.Use(Logger(), Logger2())
+
+	{
 		v1.GET("/hello", func(c *gee.Context) {
 			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
 		})
@@ -35,4 +34,19 @@ func main() {
 
 	}
 	r.Run(":9999")
+}
+
+func Logger() gee.HandlerFunc {
+	return func(c *gee.Context) {
+		c.String(http.StatusOK, "123")
+		c.Next()
+		c.String(http.StatusOK, "10")
+	}
+}
+func Logger2() gee.HandlerFunc {
+	return func(c *gee.Context) {
+		c.String(http.StatusOK, "456")
+		c.Abort()
+		c.String(http.StatusOK, "789")
+	}
 }
