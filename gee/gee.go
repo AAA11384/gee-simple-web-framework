@@ -6,10 +6,24 @@ import (
 
 type Engine struct {
 	router *router
+	RouterGroup
 }
 
+type HandlerFunc func(ctx *Context)
+
+type HandlersChain []HandlerFunc
+
 func New() *Engine {
-	return &Engine{router: newRouter()}
+	s := &Engine{
+		router: newRouter(),
+		RouterGroup: RouterGroup{
+			root:     true,
+			Handlers: nil,
+			basePath: "/",
+		},
+	}
+	s.RouterGroup.engine = s
+	return s
 }
 
 func (e *Engine) GET(pattern string, f HandlerFunc) {

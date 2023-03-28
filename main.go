@@ -1,46 +1,38 @@
 package main
 
 import (
-	"fmt"
 	"gee/gee"
 	"net/http"
 )
 
 func main() {
 	r := gee.New()
-
-	r.GET("/", func(c *gee.Context) {
-		fmt.Fprintf(c.W, "URL.Path = %q\n", c.Req.URL.Path)
+	r.GET("/index", func(c *gee.Context) {
+		c.HTML(http.StatusOK, "<h1>Index Page</h1>")
 	})
-
-	r.GET("/hello", func(c *gee.Context) {
-		for k, v := range c.Req.Header {
-			fmt.Fprintf(c.W, "Header[%q] = %q\n", k, v)
-		}
-	})
-
-	r.GET("/", func(c *gee.Context) {
-		c.HTML(http.StatusOK, "<h1>Hello Gee</h1>")
-	})
-	r.GET("/hello", func(c *gee.Context) {
-		// expect /hello?name=geektutu
-		c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
-	})
-
-	r.POST("/login", func(c *gee.Context) {
-		c.JSON(http.StatusOK, gee.H{
-			"username": c.PostForm("username"),
-			"password": c.PostForm("password"),
+	v1 := r.Group("/v1")
+	{
+		v1.GET("/", func(c *gee.Context) {
+			c.HTML(http.StatusOK, "<h1>Hello</h1>")
 		})
-	})
 
-	r.GET("/hello/:name", func(c *gee.Context) {
-		// expect /hello/geektutu
-		c.String(http.StatusOK, "hello %s, you're at %s\n", c.Param("name"), c.Path)
-	})
+		v1.GET("/hello", func(c *gee.Context) {
+			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
+		})
+	}
+	v2 := r.Group("/v2")
+	{
+		v2.GET("/hello/:name", func(c *gee.Context) {
+			// expect /hello/geektutu
+			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Param("name"), c.Path)
+		})
+		v2.POST("/login", func(c *gee.Context) {
+			c.JSON(http.StatusOK, gee.H{
+				"username": c.PostForm("username"),
+				"password": c.PostForm("password"),
+			})
+		})
 
-	r.GET("/assets/*filepath", func(c *gee.Context) {
-		c.JSON(http.StatusOK, gee.H{"filepath": c.Param("filepath")})
-	})
-	r.Run(":8080")
+	}
+	r.Run(":9999")
 }

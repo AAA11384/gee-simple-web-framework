@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-type HandlerFunc func(ctx *Context)
-
 type router struct {
 	handler map[string]HandlerFunc
 	roots   map[string]*node
