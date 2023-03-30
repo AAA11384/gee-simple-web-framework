@@ -8,11 +8,13 @@ type RouterGroup struct {
 }
 
 func (group *RouterGroup) Group(relativePath string, f ...HandlerFunc) *RouterGroup {
-	return &RouterGroup{
+	rg := &RouterGroup{
 		Handlers: group.combineHandlers(f),
 		basePath: group.calculateAbsolutePath(relativePath),
 		engine:   group.engine,
 	}
+	rg.engine.routerGroups = append(rg.engine.routerGroups, rg)
+	return rg
 }
 
 func (group *RouterGroup) calculateAbsolutePath(relativePath string) string {

@@ -21,6 +21,8 @@ type Context struct {
 	//middlewares
 	handlers []HandlerFunc
 	index    int
+	//engine pointer
+	engine *Engine
 }
 
 func (c *Context) Param(key string) string {
@@ -35,6 +37,7 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 		Path:   req.URL.Path,
 		Method: req.Method,
 		index:  -1,
+		engine: nil,
 	}
 }
 
