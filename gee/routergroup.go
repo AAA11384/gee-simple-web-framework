@@ -30,9 +30,9 @@ func (group *RouterGroup) Use(middlewares ...HandlerFunc) {
 }
 
 func (group *RouterGroup) combineHandlers(handlers ...HandlerFunc) HandlersChain {
-	//finalSize := len(group.Handlers) + len(handlers)
-	//mergedHandler := make(HandlersChain, finalSize)
-	mergedHandler := append(group.Handlers, handlers...)
+	finalSize := len(group.Handlers) + len(handlers)
+	mergedHandler := make(HandlersChain, finalSize)
+	//mergedHandler := append(group.Handlers, handlers...)
 	return mergedHandler
 }
 

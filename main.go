@@ -23,7 +23,7 @@ func main() {
 	})
 	//表单参数解析
 	r.POST("/test03", func(c *gee.Context) {
-		c.String(http.StatusOK, "test 2 success, postParam is %s", c.PostForm("postKey"))
+		c.String(http.StatusOK, "test 3 success, postParam is %s", c.PostForm("postKey"))
 	})
 
 	//路由组分组功能演示
@@ -40,7 +40,7 @@ func main() {
 	//注册中间件功能演示
 	v2 := r.Group("/v2")
 	v2.Use(func(c *gee.Context) {
-		log.Printf("a request coming at %s", time.Time{}.String())
+		log.Printf("a request coming at %s", time.Now().String())
 	})
 	{
 		v2.POST("/test05", func(c *gee.Context) {
