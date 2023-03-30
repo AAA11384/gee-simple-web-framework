@@ -83,6 +83,11 @@ func (c *Context) Data(code int, data []byte) {
 	c.W.Write(data)
 }
 
+func (c *Context) Fail(code int, info string) {
+	c.Status(code)
+	c.W.Write([]byte(info))
+}
+
 func (c *Context) Next() {
 	c.index++
 	s := len(c.handlers)

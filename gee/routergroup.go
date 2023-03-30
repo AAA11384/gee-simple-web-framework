@@ -9,7 +9,7 @@ type RouterGroup struct {
 
 func (group *RouterGroup) Group(relativePath string, f ...HandlerFunc) *RouterGroup {
 	rg := &RouterGroup{
-		Handlers: group.combineHandlers(f),
+		Handlers: group.combineHandlers(f...),
 		basePath: group.calculateAbsolutePath(relativePath),
 		engine:   group.engine,
 	}
@@ -29,9 +29,10 @@ func (group *RouterGroup) Use(middlewares ...HandlerFunc) {
 	group.Handlers = append(group.Handlers, middlewares...)
 }
 
-func (group *RouterGroup) combineHandlers(handlers HandlersChain) HandlersChain {
-	finalSize := len(group.Handlers) + len(handlers)
-	mergedHandler := make(HandlersChain, finalSize)
+func (group *RouterGroup) combineHandlers(handlers ...HandlerFunc) HandlersChain {
+	//finalSize := len(group.Handlers) + len(handlers)
+	//mergedHandler := make(HandlersChain, finalSize)
+	mergedHandler := append(group.Handlers, handlers...)
 	return mergedHandler
 }
 
